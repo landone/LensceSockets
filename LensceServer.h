@@ -27,8 +27,12 @@ public:
 
 	/* Send TCP data to a client */
 	bool sendTCP(int client, const char* data, int size);
+	/* Send TCP data to all clients */
+	void sendTCPAll(const char* data, int size);
 	/* Send UDP data to a client */
 	bool sendUDP(int client, const char* data, int size);
+	/* Send UDP data to all clients */
+	void sendUDPAll(const char* data, int size);
 	/*
 	*	Flag client to be kicked.
 	*	Performed next thread loop.

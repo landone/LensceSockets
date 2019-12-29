@@ -5,6 +5,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+bool LensceSocket::PRINT_ERRORS = false;
 static bool wsa_uninit = true;
 static const WORD WSA_VERSION = MAKEWORD(2, 2);
 static WSADATA WSA_DATA = { 0 };
@@ -62,6 +63,12 @@ bool LensceSocket::init(const char* ip, int port) {
 
 }
 
+void LensceSocket::printErrors(bool toggle) {
+
+	PRINT_ERRORS = toggle;
+
+}
+
 bool LensceSocket::Connect() {
 
 	if (isConnected()) {
@@ -108,7 +115,6 @@ bool LensceSocket::SendTCP(const char* buf, int len) {
 
 	if (sendto(tcp, buf, len, NULL, (SOCKADDR*)&tcpAddr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
 		printError("sending TCP data");
-		std::cout << WSAGetLastError() << std::endl;
 		return false;
 	}
 
@@ -234,7 +240,9 @@ LensceSocket LensceSocket::AcceptTCP() {
 
 void LensceSocket::printError(const char* error) {
 
-	std::cerr << "Lensce_Socket: Error " << error << std::endl;
+	if (PRINT_ERRORS) {
+		std::cerr << "Lensce_Socket: Error " << error << std::endl;
+	}
 
 }
 

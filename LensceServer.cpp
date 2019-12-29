@@ -211,6 +211,18 @@ bool LensceServer::sendTCP(int client, const char* data, int size) {
 
 }
 
+void LensceServer::sendTCPAll(const char* data, int size) {
+
+	for (int i = 0; i < maxClients; ++i) {
+
+		if (thrClients[i].soc.isConnected()) {
+			thrClients[i].soc.SendTCP(data, size);
+		}
+
+	}
+
+}
+
 bool LensceServer::sendUDP(int client, const char* data, int size) {
 
 	LensceSocket& soc = thrClients[client].soc;
@@ -220,6 +232,18 @@ bool LensceServer::sendUDP(int client, const char* data, int size) {
 	}
 
 	return soc.SendUDP(data, size);
+
+}
+
+void LensceServer::sendUDPAll(const char* data, int size) {
+
+	for (int i = 0; i < maxClients; ++i) {
+
+		if (thrClients[i].soc.isConnected()) {
+			thrClients[i].soc.SendUDP(data, size);
+		}
+
+	}
 
 }
 

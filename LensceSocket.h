@@ -43,9 +43,10 @@ public:
 	/* Accept TCP connection */
 	LensceSocket AcceptTCP();
 
+	static void printErrors(bool);
+
 	/* If TCP connection is stable */
 	bool isConnected() { return connected; };
-
 	/* Return TCP socket */
 	SOCKET getTCPSocket() { return tcp; }
 	/* Return UDP socket */
@@ -57,6 +58,8 @@ public:
 	static void CleanUp();
 
 protected:
+
+	static bool PRINT_ERRORS;
 
 	SOCKET tcp = { 0 };
 	SOCKET udp = { 0 };
