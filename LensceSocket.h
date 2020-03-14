@@ -1,6 +1,12 @@
 #pragma once
 
+#define LENSCE_LINUX
+
+#ifdef LENSCE_LINUX
+#include <netinet/in.h>
+#else
 #include <WinSock2.h>
+#endif
 
 /*
 Lensce_Socket:
@@ -48,11 +54,11 @@ public:
 	/* If TCP connection is stable */
 	bool isConnected() { return connected; };
 	/* Return TCP socket */
-	SOCKET getTCPSocket() { return tcp; }
+	int getTCPSocket() { return tcp; }
 	/* Return UDP socket */
-	SOCKET getUDPSocket() { return udp; }
+	int getUDPSocket() { return udp; }
 	/* Return TCP socket address */
-	SOCKADDR_IN getAddr() { return tcpAddr; }
+	struct sockaddr_in getAddr() { return tcpAddr; }
 
 	/* Clean up WSA initialization */
 	static void CleanUp();
@@ -61,10 +67,10 @@ protected:
 
 	static bool PRINT_ERRORS;
 
-	SOCKET tcp = { 0 };
-	SOCKET udp = { 0 };
-	SOCKADDR_IN tcpAddr = { 0 };
-	SOCKADDR_IN udpAddr = { 0 };
+	int tcp = { 0 };
+	int udp = { 0 };
+	struct sockaddr_in tcpAddr = { 0 };
+	struct sockaddr_in udpAddr = { 0 };
 	bool connected = false;
 
 	static void printError(const char*);

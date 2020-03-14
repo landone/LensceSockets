@@ -1,9 +1,36 @@
 #include "LensceClient.h"
 
 #include <iostream>
+#ifdef LENSCE_LINUX
+#include <poll.h>
+#endif
 
-static void LensceClientTCPThread(LensceClient& client) {
+void LensceClientTCPThread(LensceClient& client) {
 
+	#ifdef LENSCE_LINUX
+	int tcpSoc = client.soc.getTCPSocket();
+	struct pollfd fdArray = { 0 };
+	fdArray.fd = tcpSoc;
+	fdArray.events = POLLRDNORM;
+	fdArray.revents = 0;
+
+	while (client.soc.isConnected()) {
+
+		if (poll(&fdArray, 1, 1) > 0) {
+			char data[LensceClient::MAX_READ];
+			int read = 0;
+			if ((client.soc.RecvTCP(data, LensceClient::MAX_READ, read)) && (read > 0)) {
+				if (client.receiveTCPCbk) {
+					client.receiveTCPCbk(data, read);
+				}
+			}
+			else {
+				break;
+			}
+		}
+
+	}
+	#else
 	SOCKET tcpSoc = client.soc.getTCPSocket();
 	WSAPOLLFD fdArray = { 0 };
 	fdArray.fd = tcpSoc;
@@ -26,6 +53,7 @@ static void LensceClientTCPThread(LensceClient& client) {
 		}
 
 	}
+	#endif
 	
 	if (client.disconnectCbk) {
 		client.disconnectCbk();
@@ -35,8 +63,35 @@ static void LensceClientTCPThread(LensceClient& client) {
 
 }
 
-static void LensceClientUDPThread(LensceClient& client) {
+void LensceClientUDPThread(LensceClient& client) {
 
+	#ifdef LENSCE_LINUX
+	int udpSoc = client.soc.getUDPSocket();
+	struct pollfd fdArray = { 0 };
+	fdArray.fd = udpSoc;
+	fdArray.events = POLLRDNORM;
+	fdArray.revents = 0;
+	
+	while (client.soc.isConnected()) {
+
+		if (poll(&fdArray, 1, 1) > 0) {
+			char data[LensceClient::MAX_READ];
+			int read = 0;
+			sockaddr addr = client.soc.RecvUDP(data, LensceClient::MAX_READ, read);
+			if ((read > 0) && (client.receiveUDPCbk)) {
+
+				struct sockaddr_in adin = *((struct sockaddr_in*)&addr);
+				struct sockaddr_in server = client.soc.getAddr();
+
+				if ((server.sin_addr.s_addr == adin.sin_addr.s_addr)
+					&& (server.sin_port == adin.sin_port)) {
+					client.receiveUDPCbk(data, read);
+				}
+
+			}
+		}
+	}
+	#else
 	SOCKET udpSoc = client.soc.getUDPSocket();
 	WSAPOLLFD fdArray = { 0 };
 	fdArray.fd = udpSoc;
@@ -62,6 +117,8 @@ static void LensceClientUDPThread(LensceClient& client) {
 			}
 		}
 	}
+	#endif
+
 }
 
 LensceClient::LensceClient() {
