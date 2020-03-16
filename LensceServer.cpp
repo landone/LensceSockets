@@ -1,33 +1,61 @@
 #include "LensceServer.h"
 
 #include <iostream>
+#ifdef LENSCE_LINUX
+#include <poll.h>
+#else
 #include <WS2tcpip.h>
+#endif
 
-static void LensceClientLoop(LensceServer& server, int client) {
+void LensceClientLoop(LensceServer& server, int client) {
 
 	LensceSocket& soc = server.thrClients[client].soc;
 	bool& kicked = server.thrClients[client].kicked;
-	WSAPOLLFD fdArray = { 0 };
-	fdArray.fd = soc.getTCPSocket();
-	fdArray.events = POLLRDNORM;
-	fdArray.revents = 0;
+	#ifdef LENSCE_LINUX
+		struct pollfd fdArray = { 0 };
+		fdArray.fd = soc.getTCPSocket();
+		fdArray.events = POLLRDNORM;
+		fdArray.revents = 0;
 
-	while (server.isRunning() && soc.isConnected() && !kicked) {
-		
-		if (WSAPoll(&fdArray, 1, 1) > 0) {
-			char buf[server.MAX_READ];
-			int read = 0;
-			if (soc.RecvTCP(buf, server.MAX_READ, read) && read > 0) {
-				if (server.receiveTCPCbk) {
-					server.receiveTCPCbk(client, buf, read);
+		while (server.isRunning() && soc.isConnected() && !kicked) {
+			
+			if (poll(&fdArray, 1, 1) > 0) {
+				char buf[server.MAX_READ];
+				int read = 0;
+				if (soc.RecvTCP(buf, server.MAX_READ, read) && read > 0) {
+					if (server.receiveTCPCbk) {
+						server.receiveTCPCbk(client, buf, read);
+					}
+				}
+				else {
+					break;
 				}
 			}
-			else {
-				break;
-			}
-		}
 
-	}
+		}
+	#else
+		WSAPOLLFD fdArray = { 0 };
+		fdArray.fd = soc.getTCPSocket();
+		fdArray.events = POLLRDNORM;
+		fdArray.revents = 0;
+
+		while (server.isRunning() && soc.isConnected() && !kicked) {
+			
+			if (WSAPoll(&fdArray, 1, 1) > 0) {
+				char buf[server.MAX_READ];
+				int read = 0;
+				if (soc.RecvTCP(buf, server.MAX_READ, read) && read > 0) {
+					if (server.receiveTCPCbk) {
+						server.receiveTCPCbk(client, buf, read);
+					}
+				}
+				else {
+					break;
+				}
+			}
+
+		}
+	#endif
 
 	if (server.disconnectCbk) {
 		server.disconnectCbk(client);
@@ -40,7 +68,7 @@ static void LensceClientLoop(LensceServer& server, int client) {
 
 }
 
-static void LensceServerTCPLoop(LensceServer& server) {
+void LensceServerTCPLoop(LensceServer& server) {
 
 	LensceSocket& soc = server.soc;
 
@@ -57,46 +85,84 @@ static void LensceServerTCPLoop(LensceServer& server) {
 
 }
 
-static void LensceServerUDPLoop(LensceServer& server) {
+void LensceServerUDPLoop(LensceServer& server) {
 
 	LensceSocket& soc = server.soc;
-	WSAPOLLFD fdArray = { 0 };
-	fdArray.fd = soc.getUDPSocket();
-	fdArray.events = POLLRDNORM;
-	fdArray.revents = 0;
-	char buf[server.MAX_READ];
+	#ifdef LENSCE_LINUX
+		struct pollfd fdArray = { 0 };
+		fdArray.fd = soc.getUDPSocket();
+		fdArray.events = POLLRDNORM;
+		fdArray.revents = 0;
+		char buf[server.MAX_READ];
 
-	while (soc.isConnected()) {
-		
-		if (WSAPoll(&fdArray, 1, 1) > 0) {
-			int read = 0;
-			sockaddr addr = soc.RecvUDP(buf, server.MAX_READ, read);
-			if ((server.receiveUDPCbk) && (read > 0)) {
-				SOCKADDR_IN adin = *((SOCKADDR_IN*)&addr);
-				int client = -1;
+		while (soc.isConnected()) {
+			
+			if (poll(&fdArray, 1, 1) > 0) {
+				int read = 0;
+				sockaddr addr = soc.RecvUDP(buf, server.MAX_READ, read);
+				if ((server.receiveUDPCbk) && (read > 0)) {
+					struct sockaddr_in adin = *((struct sockaddr_in*)&addr);
+					int client = -1;
 
-				for (int i = 0; i < server.maxClients; ++i) {
+					for (int i = 0; i < server.maxClients; ++i) {
 
-					if (!server.thrClients[i].soc.isConnected()) {
-						continue;
+						if (!server.thrClients[i].soc.isConnected()) {
+							continue;
+						}
+
+						struct sockaddr_in clAddr = server.thrClients[i].soc.getAddr();
+						if ((clAddr.sin_addr.s_addr == adin.sin_addr.s_addr)
+							&& (clAddr.sin_port == adin.sin_port)) {
+							client = i;
+						}
+
 					}
 
-					SOCKADDR_IN clAddr = server.thrClients[i].soc.getAddr();
-					if ((clAddr.sin_addr.S_un.S_addr == adin.sin_addr.S_un.S_addr)
-						&& (clAddr.sin_port == adin.sin_port)) {
-						client = i;
+					if (client > -1) {
+						server.receiveUDPCbk(client, buf, read);
 					}
 
 				}
-
-				if (client > -1) {
-					server.receiveUDPCbk(client, buf, read);
-				}
-
 			}
 		}
-	}
+	#else
+		WSAPOLLFD fdArray = { 0 };
+		fdArray.fd = soc.getUDPSocket();
+		fdArray.events = POLLRDNORM;
+		fdArray.revents = 0;
+		char buf[server.MAX_READ];
 
+		while (soc.isConnected()) {
+			
+			if (WSAPoll(&fdArray, 1, 1) > 0) {
+				int read = 0;
+				sockaddr addr = soc.RecvUDP(buf, server.MAX_READ, read);
+				if ((server.receiveUDPCbk) && (read > 0)) {
+					SOCKADDR_IN adin = *((SOCKADDR_IN*)&addr);
+					int client = -1;
+
+					for (int i = 0; i < server.maxClients; ++i) {
+
+						if (!server.thrClients[i].soc.isConnected()) {
+							continue;
+						}
+
+						SOCKADDR_IN clAddr = server.thrClients[i].soc.getAddr();
+						if ((clAddr.sin_addr.S_un.S_addr == adin.sin_addr.S_un.S_addr)
+							&& (clAddr.sin_port == adin.sin_port)) {
+							client = i;
+						}
+
+					}
+
+					if (client > -1) {
+						server.receiveUDPCbk(client, buf, read);
+					}
+
+				}
+			}
+		}
+	#endif
 }
 
 LensceServer::LensceServer(int port, int maxClients, int backlog) {
@@ -124,7 +190,7 @@ bool LensceServer::start() {
 	if (isRunning()) {
 		return true;
 	}
-
+	
 	if (!(soc.Bind() && soc.ListenTCP(backlog))) {
 		printError("starting");
 		soc.Disconnect();

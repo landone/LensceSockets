@@ -52,9 +52,9 @@ public:
 
 private:
 
-	friend static void LensceClientLoop(LensceServer&, int);
-	friend static void LensceServerTCPLoop(LensceServer&);
-	friend static void LensceServerUDPLoop(LensceServer&);
+	friend void LensceClientLoop(LensceServer&, int);
+	friend void LensceServerTCPLoop(LensceServer&);
+	friend void LensceServerUDPLoop(LensceServer&);
 
 	struct Client {
 		std::thread thr;
