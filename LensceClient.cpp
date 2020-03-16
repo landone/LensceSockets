@@ -118,7 +118,7 @@ void LensceClientUDPThread(LensceClient& client) {
 		}
 	}
 	#endif
-
+	
 }
 
 LensceClient::LensceClient() {
@@ -151,7 +151,10 @@ bool LensceClient::connect(std::string ip, int port) {
 
 void LensceClient::disconnect() {
 
-	discMtx.lock();
+	if (!discMtx.try_lock()){
+		/* Unnecessary to disconnect if already disconnecting */
+		return;
+	}
 
 	soc.Disconnect();
 	soc.CloseUDP();

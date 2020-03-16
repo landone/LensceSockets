@@ -33,13 +33,14 @@ bool LensceSocket::init(const char* ip, int port) {
 
 	#ifdef LENSCE_LINUX
 		tcp = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-		if (tcp == -1){
+		if (tcp == SOCKET_ERROR){
 			printError("creating TCP socket");
 			return false;
 		}
 		udp = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-		if (udp == -1){
+		if (udp == SOCKET_ERROR){
 			close(tcp);
+			printError("creating UDP socket");
 			return false;
 		}
 
