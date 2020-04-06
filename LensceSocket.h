@@ -1,7 +1,5 @@
 #pragma once
 
-#define LENSCE_LINUX
-
 #ifdef LENSCE_LINUX
 #include <netinet/in.h>
 #else

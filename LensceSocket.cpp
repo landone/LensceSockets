@@ -88,7 +88,7 @@ bool LensceSocket::init(const char* ip, int port) {
 			udpAddr.sin_port = htons(port);
 		}
 		else {
-			if (InetPton(AF_INET, ip, &tcpAddr.sin_addr.S_un.S_addr) != 1) {
+			if (InetPton(AF_INET, (PCWSTR)ip, &tcpAddr.sin_addr.S_un.S_addr) != 1) {
 				printError("formatting address (InetPton)");
 				return false;
 			}
