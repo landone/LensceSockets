@@ -1,4 +1,5 @@
 # LensceSockets
-TCP/UDP IPv4 Server/Client socket interface
-A reconstruction of my previous SocConn project.
-Supports Windows & Linux
+TCP/UDP IPv4 Server/Client socket interface.
+- Allows simplified program networking.
+- Supports Windows & Linux applications.
+- Supplied library for development.
