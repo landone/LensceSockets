@@ -88,7 +88,8 @@ bool LensceSocket::init(const char* ip, int port) {
 			udpAddr.sin_port = htons(port);
 		}
 		else {
-			if (InetPton(AF_INET, (PCWSTR)ip, &tcpAddr.sin_addr.S_un.S_addr) != 1) {
+			//if (InetPton(AF_INET, (PCWSTR)ip, &tcpAddr.sin_addr.S_un.S_addr) != 1) {
+			if (inet_pton(AF_INET, ip, &tcpAddr.sin_addr.S_un.S_addr) != 1) {
 				printError("formatting address (InetPton)");
 				return false;
 			}
@@ -328,6 +329,7 @@ LensceSocket LensceSocket::AcceptTCP() {
 
 	LensceSocket client;
 	client.tcp = this->tcp;
+	client.connected = false;
 	#ifdef LENSCE_LINUX
 		int clientAddrSize = sizeof(sockaddr_in);
 		client.tcp = accept(tcp, (sockaddr*)& client.tcpAddr, (socklen_t*)&clientAddrSize);
@@ -338,13 +340,19 @@ LensceSocket LensceSocket::AcceptTCP() {
 			printError("accepting socket");
 		}
 	#else
-		int clientAddrSize = sizeof(SOCKADDR_IN);
-		client.tcp = accept(tcp, (SOCKADDR*)& client.tcpAddr, &clientAddrSize);
-		client.udp = udp;
-		client.udpAddr = udpAddr;
-		client.connected = (client.tcp != INVALID_SOCKET);
-		if (!client.connected) {
-			printError("accepting socket");
+		WSAPOLLFD fdArray = { 0 };
+		fdArray.fd = tcp;
+		fdArray.events = POLLRDNORM;
+		fdArray.revents = 0;
+		if (WSAPoll(&fdArray, 1, 1) > 0) {
+			int clientAddrSize = sizeof(SOCKADDR_IN);
+			client.tcp = accept(tcp, (SOCKADDR*)&client.tcpAddr, &clientAddrSize);
+			client.udp = udp;
+			client.udpAddr = udpAddr;
+			client.connected = (client.tcp != INVALID_SOCKET);
+			if (!client.connected) {
+				printError("accepting socket");
+			}
 		}
 	#endif
 	return client;

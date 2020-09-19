@@ -1,5 +1,56 @@
+#include "../LensceServer.h"
+#include "../LensceClient.h"
+
+#include <iostream>
+#include <string>
+
+void onConnect(int client) {
+
+	printf("Client%d connected\n", client);
+
+}
+
+void onDisconnect(int client) {
+
+	printf("Client%d disconnected\n", client);
+
+}
+
 int main() {
 
-	return 1;
+	LensceSocket::printErrors(true);
+	std::string input;
+	std::getline(std::cin, input);
+	int port = 5000;
+	int maxClients = 10;
+	if (input.compare("s") == 0) {
+
+		printf("Server Mode\n");
+		LensceServer server(port, maxClients, maxClients);
+		server.connectCallback(onConnect);
+		server.disconnectCallback(onDisconnect);
+		server.start();
+		while (server.isRunning()) {
+
+			std::getline(std::cin, input);
+			if (input.compare("exit") == 0) {
+				server.stop();
+			}
+
+		}
+
+	}
+	else {
+
+		printf("Client Mode\n");
+		LensceClient client;
+		client.connect("192.168.1.127", port);
+
+		std::getline(std::cin, input);
+		client.disconnect();
+
+	}
+
+	return 0;
 
 }
