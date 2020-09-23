@@ -67,12 +67,12 @@ bool LensceSocket::init(const char* ip, int port) {
 			}
 		}
 
-		tcp = WSASocketW(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, NULL, NULL);
+		tcp = (int)WSASocketW(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, NULL, NULL);
 		if (tcp == INVALID_SOCKET) {
 			printError("creating TCP socket");
 			return false;
 		}
-		udp = WSASocketW(AF_INET, SOCK_DGRAM, IPPROTO_UDP, NULL, NULL, NULL);
+		udp = (int)WSASocketW(AF_INET, SOCK_DGRAM, IPPROTO_UDP, NULL, NULL, NULL);
 		if (udp == INVALID_SOCKET) {
 			closesocket(tcp);
 			printError("creating UDP socket");
@@ -346,7 +346,7 @@ LensceSocket LensceSocket::AcceptTCP() {
 		fdArray.revents = 0;
 		if (WSAPoll(&fdArray, 1, 1) > 0) {
 			int clientAddrSize = sizeof(SOCKADDR_IN);
-			client.tcp = accept(tcp, (SOCKADDR*)&client.tcpAddr, &clientAddrSize);
+			client.tcp = (int)accept(tcp, (SOCKADDR*)&client.tcpAddr, &clientAddrSize);
 			client.udp = udp;
 			client.udpAddr = udpAddr;
 			client.connected = (client.tcp != INVALID_SOCKET);

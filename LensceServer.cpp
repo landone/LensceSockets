@@ -165,17 +165,9 @@ void LensceServerUDPLoop(LensceServer& server) {
 	#endif
 }
 
-LensceServer::LensceServer(int port, int maxClients, int backlog) {
+LensceServer::LensceServer() {
 
-	if (!soc.init(NULL, port)) {
-		printError("initializing");
-		return;
-	}
 	
-	this->maxClients = maxClients;
-	this->backlog = backlog;
-
-	thrClients = new Client[maxClients];
 
 }
 
@@ -185,11 +177,28 @@ LensceServer::~LensceServer() {
 
 }
 
-bool LensceServer::start() {
+bool LensceServer::start(int port, int maxClients, int backlog) {
 
 	if (isRunning()) {
 		return true;
 	}
+
+	soc.Disconnect();
+	soc.CloseUDP();
+
+	this->maxClients = maxClients;
+	this->backlog = backlog;
+
+	if (!soc.init(NULL, port)) {
+		printError("initializing");
+		return false;
+	}
+
+	if (thrClients) {
+		delete[] thrClients;
+		thrClients = nullptr;
+	}
+	thrClients = new Client[maxClients];
 	
 	if (!(soc.Bind() && soc.ListenTCP(backlog))) {
 		printError("starting");

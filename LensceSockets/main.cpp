@@ -26,10 +26,10 @@ int main() {
 	if (input.compare("s") == 0) {
 
 		printf("Server Mode\n");
-		LensceServer server(port, maxClients, maxClients);
+		LensceServer server;
 		server.connectCallback(onConnect);
 		server.disconnectCallback(onDisconnect);
-		server.start();
+		server.start(port, maxClients, maxClients);
 		while (server.isRunning()) {
 
 			std::getline(std::cin, input);

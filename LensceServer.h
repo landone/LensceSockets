@@ -15,11 +15,11 @@ public:
 	*	Prepare server information.
 	*	Backlog is queue size for incoming connections.
 	*/
-	LensceServer(int port, int maxClients, int backlog);
+	LensceServer();
 	~LensceServer();
 
 	/* Bind to ports and start accepting clients. */
-	bool start();
+	bool start(int port, int maxClients, int backlog);
 	/* If server is still accepting connections */
 	bool isRunning() { return soc.isConnected(); }
 	/* Stop server and disconnect all clients */
@@ -63,7 +63,7 @@ private:
 	};
 
 	LensceSocket soc;
-	int maxClients;
+	int maxClients = 0;
 	int clientCount = 0;
 	int backlog = 0;
 
@@ -75,7 +75,7 @@ private:
 	std::thread thrServer[2]; //2 threads for TCP & UDP respectively
 	std::mutex clientMtx; //Mutex for changing client count value.
 	std::mutex stopMtx; //Mutex for stopping server safely
-	Client* thrClients;
+	Client* thrClients = nullptr;
 
 	int addClient(LensceSocket);
 
