@@ -362,7 +362,7 @@ LensceSocket LensceSocket::AcceptTCP() {
 void LensceSocket::printError(const char* error) {
 
 	if (PRINT_ERRORS) {
-		std::cerr << "Lensce_Socket: Error(" << errno << ") " << error << std::endl;
+		std::cerr << "Lensce_Socket: Error(" << errno << "|" << WSAGetLastError() << ") " << error << std::endl;
 	}
 
 }

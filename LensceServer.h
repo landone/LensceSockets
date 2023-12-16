@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <mutex>
+#include <vector>
 
 class LensceServer {
 public:
@@ -40,6 +41,8 @@ public:
 	void kick(int client);
 	/* Maximum amount of clients to serve at once. */
 	int getMaxClients() { return maxClients; }
+	/* Get list of connected clients */
+	std::vector<int> getClients();
 
 	/* Set callback to handle TCP data */
 	void receiveTCPCallback(void(*f)(int client, char[MAX_READ], int size));
@@ -59,7 +62,7 @@ private:
 	struct Client {
 		std::thread thr;
 		LensceSocket soc;
-		bool kicked;
+		bool kicked = false;
 	};
 
 	LensceSocket soc;

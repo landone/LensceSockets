@@ -335,6 +335,23 @@ void LensceServer::kick(int client) {
 
 }
 
+std::vector<int> LensceServer::getClients() {
+
+	std::vector<int> result;
+	result.reserve(clientCount);
+
+	for (int i = 0; i < maxClients; ++i) {
+
+		if (thrClients[i].soc.isConnected()) {
+			result.push_back(i);
+		}
+
+	}
+
+	return result;
+
+}
+
 void LensceServer::receiveTCPCallback(void(*f)(int client, char[MAX_READ], int size))
 {
 	receiveTCPCbk = f;
