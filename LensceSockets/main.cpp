@@ -1,117 +1,44 @@
-#include "../LensceServer.h"
-#include "../LensceClient.h"
-
 #include <iostream>
-#include <string>
 
-static LensceServer server;
-
-void onConnect(int client) {
-
-	printf("Client%d honk connected\n", client);
-	std::string output = "Client";
-	output.append(std::to_string(client));
-	output.append(" connected");
-	server.sendTCPAll(output.c_str(), (int)output.length());
-
-}
-
-void onDisconnect(int client) {
-
-	printf("Client%d disconnected\n", client);
-	std::string output = "Client";
-	output.append(std::to_string(client));
-	output.append(" disconnected");
-	server.sendTCPAll(output.c_str(), (int)output.length());
-
-}
-
-void dataReceived(char* data, int len) {
-
-	char* buffer = new char[len + 1];
-	for (int i = 0; i < len; i++) {
-		buffer[i] = data[i];
-	}
-	buffer[len] = '\0';
-	printf("%s\n", buffer);
-
-}
-
-void dataReceivedServer(int client, char* data, int len) {
-
-	std::string prefix = "Client";
-	prefix.append(std::to_string(client));
-	prefix.append(": ");
-	int totalLen = (int)prefix.length() + len;
-	char* buffer = new char[totalLen + 1];
-	for (int i = 0; i < totalLen; i++) {
-		if (i < prefix.length()) {
-			buffer[i] = prefix.at(i);
-		}
-		else {
-			buffer[i] = data[i - prefix.length()];
-		}
-	}
-	buffer[totalLen] = '\0';
-	printf("%s\n", buffer);
-	std::vector<int> clients = server.getClients();
-	for (int i = 0; i < clients.size(); i++) {
-		int clientID = clients[i];
-		if (clientID == client) {
-			continue;
-		}
-		server.sendTCP(clientID, buffer, totalLen);
-	}
-
-}
+#include <LensceSocket.h>
+#include <LensceHTTP.h>
 
 int main() {
 
-	LensceSocket::printErrors(true);
-	std::string input;
-	std::getline(std::cin, input);
-	int port = 5000;
-	int maxClients = 10;
-	if (input.compare("s") == 0) {
+	std::string ip = "google.com";
+	char buffer[1024 * 10];
 
-		printf("Server Mode\n");
-		server.connectCallback(onConnect);
-		server.disconnectCallback(onDisconnect);
-		server.receiveTCPCallback(dataReceivedServer);
-		server.start(port, maxClients, maxClients);
-		while (server.isRunning()) {
+	std::string request = 
+		"GET / HTTP/1.1\r\n"
+		"Host: www.google.com\r\n"
+		"Accept: */*"
+		"Accept-Language: en-US,en;q=0.9\r\n"
+		"Connection: close\r\n"
+		"\r\n";
 
-			std::getline(std::cin, input);
-			if (input.compare("exit") == 0) {
-				server.stop();
-				break;
-			}
+	std::cout << "Connecting to " << ip << "..." << std::endl << std::endl;
 
-			std::string output = "Server: ";
-			output.append(input);
-			server.sendTCPAll(output.c_str(), (int)output.length());
+	Lensce::Socket socket;
+	socket.connect(ip, 80);
 
-		}
+	socket.send(request.c_str(), request.size());
 
-	}
-	else {
-
-		printf("Client Mode\n");
-		LensceClient client;
-		client.connect("192.168.1.136", port);
-		client.receiveTCPCallback(dataReceived);
-
-		while (client.isConnected()) {
-			std::getline(std::cin, input);
-			if (input.compare("exit") == 0) {
-				client.disconnect();
-				break;
-			}
-			client.sendTCP(input.c_str(), (int)input.length());
-		}
-
+	char* pos = buffer;
+	int bytesReceived = 0;
+	while ((bytesReceived = socket.receive(pos, sizeof(buffer))) > 0) {
+		pos += bytesReceived;
 	}
 
+	std::cout << buffer << std::endl;
+
+	socket.close();
+
+	auto response = Lensce::HTTP::read(buffer);
+
+	std::cout << buffer << std::endl;
+	
+
+	system("pause");
+	Lensce::cleanup();
 	return 0;
-
 }

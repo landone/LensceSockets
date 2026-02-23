@@ -7,25 +7,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LensceSocket.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\LensceClient.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\LensceServer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClInclude Include="LensceSocket.h" />
+    <ClInclude Include="LensceHTTP.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LensceSocket.h">
+    <ClCompile Include="LensceSocket.cpp">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\LensceClient.h">
+    </ClCompile>
+    <ClCompile Include="LensceHTTP.cpp">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\LensceServer.h">
-      <Filter>src</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>

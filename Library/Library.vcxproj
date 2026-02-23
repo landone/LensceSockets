@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LensceHTTP.h" />
+    <ClInclude Include="LensceSocket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LensceHTTP.cpp" />
+    <ClCompile Include="LensceSocket.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{B50F8A35-9024-4CDC-A0F4-ED2AD6ABC4D8}</ProjectGuid>
@@ -137,16 +145,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\LensceClient.cpp" />
-    <ClCompile Include="..\LensceServer.cpp" />
-    <ClCompile Include="..\LensceSocket.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\LensceClient.h" />
-    <ClInclude Include="..\LensceServer.h" />
-    <ClInclude Include="..\LensceSocket.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
