@@ -22,6 +22,8 @@ namespace Lensce {
 
 		void close();
 
+		unsigned long long getHandle() const { return socketHandle; }
+
 	private:
 
 		unsigned long long socketHandle;

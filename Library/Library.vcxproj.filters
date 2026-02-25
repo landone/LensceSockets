@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClInclude Include="LensceSocket.h" />
     <ClInclude Include="LensceHTTP.h" />
+    <ClInclude Include="LensceTLS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LensceSocket.cpp">
@@ -17,5 +18,11 @@
     <ClCompile Include="LensceHTTP.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="LensceTLS.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

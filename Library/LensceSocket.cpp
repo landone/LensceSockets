@@ -3,6 +3,8 @@
 #include <iostream>
 #include <regex>
 
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")

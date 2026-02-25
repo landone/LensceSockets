@@ -2,15 +2,16 @@
 
 #include <LensceSocket.h>
 #include <LensceHTTP.h>
+#include <LensceTLS.h>
 
 int main() {
 
-	std::string ip = "google.com";
-	char buffer[1024 * 10];
+	std::string ip = "steamcommunity.com";
+	//char buffer[1024 * 10];
 
 	std::string request = 
 		"GET / HTTP/1.1\r\n"
-		"Host: www.google.com\r\n"
+		"Host: steamcommunity.com\r\n"
 		"Accept: */*"
 		"Accept-Language: en-US,en;q=0.9\r\n"
 		"Connection: close\r\n"
@@ -18,25 +19,17 @@ int main() {
 
 	std::cout << "Connecting to " << ip << "..." << std::endl << std::endl;
 
-	Lensce::Socket socket;
-	socket.connect(ip, 80);
-
-	socket.send(request.c_str(), request.size());
-
-	char* pos = buffer;
-	int bytesReceived = 0;
-	while ((bytesReceived = socket.receive(pos, sizeof(buffer))) > 0) {
-		pos += bytesReceived;
+	{
+		Lensce::TLS::Socket socket(ip);
+		std::vector<BYTE> data(request.begin(), request.end());
+		socket.send(data);
+		while (socket.receive(data)) {
+			for (BYTE byte : data) {
+				std::cout << static_cast<char>(byte);
+			}
+		}
+		std::cout << std::endl << std::endl;
 	}
-
-	std::cout << buffer << std::endl;
-
-	socket.close();
-
-	auto response = Lensce::HTTP::read(buffer);
-
-	std::cout << buffer << std::endl;
-	
 
 	system("pause");
 	Lensce::cleanup();
