@@ -20,11 +20,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="JSON.h" />
     <ClInclude Include="LensceHTTP.h" />
     <ClInclude Include="LensceSocket.h" />
     <ClInclude Include="LensceTLS.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="JSON.cpp" />
     <ClCompile Include="LensceHTTP.cpp" />
     <ClCompile Include="LensceSocket.cpp" />
     <ClCompile Include="LensceTLS.cpp" />

@@ -10,6 +10,7 @@
     <ClInclude Include="LensceSocket.h" />
     <ClInclude Include="LensceHTTP.h" />
     <ClInclude Include="LensceTLS.h" />
+    <ClInclude Include="JSON.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LensceSocket.cpp">
@@ -19,6 +20,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="LensceTLS.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
