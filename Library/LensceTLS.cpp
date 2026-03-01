@@ -56,20 +56,29 @@ namespace Lensce {
 			return true;
 		}
 
-		bool Socket::receive(std::vector<BYTE>& buffer) {
+		bool Socket::receive(std::vector<BYTE>& buffer, bool append) {
 			if (!sslObject) {
 				std::cerr << "SSL object not initialized." << std::endl;
 				return false;
 			}
-			buffer.resize(MAX_READ_SIZE);
-			int bytesRead = SSL_read(static_cast<SSL*>(sslObject), buffer.data(), MAX_READ_SIZE);
+			std::vector<BYTE> newData;
+			newData.resize(MAX_READ_SIZE);
+			int bytesRead = SSL_read(static_cast<SSL*>(sslObject), newData.data(), MAX_READ_SIZE);
 			if (bytesRead <= 0) {
 				if (bytesRead < 0) {
 					std::cerr << "Failed to read data over SSL: " << ERR_get_error() << std::endl;
 				}
 				return false;
 			}
-			buffer.resize(bytesRead);
+			newData.resize(bytesRead);
+
+			if (append) {
+				buffer.insert(buffer.end(), newData.begin(), newData.end());
+			}
+			else {
+				buffer = std::move(newData);
+			}
+
 			return true;
 		}
 

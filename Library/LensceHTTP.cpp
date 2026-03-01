@@ -28,10 +28,17 @@ namespace Lensce {
 			Response result;
 			size_t offset = 0;
 			size_t lineEnd = 0;
+			bool hasContent = false;
 			std::string searchString = "\r\n";
 			while ((lineEnd = rawResponse.find(searchString, offset)) != std::string::npos) {
 
 				std::string line = rawResponse.substr(offset, lineEnd - offset);
+
+				if (line.empty()) {
+					hasContent = true;
+					break;
+				}
+
 				offset = lineEnd + searchString.size();
 
 				auto header = readHeader(line);
@@ -39,14 +46,19 @@ namespace Lensce {
 					continue;
 				}
 
-				result.headers[header.first].push_back(std::move(header.second));
+				result.headers[header.first].push_back(header.second);
 
 			}
 
-			std::string lastLine = rawResponse.substr(offset);
-			auto header = readHeader(lastLine);
-			if (!header.first.empty()) {
-				result.headers[header.first].push_back(std::move(header.second));
+			if (!hasContent) {
+				std::string lastLine = rawResponse.substr(offset);
+				auto header = readHeader(lastLine);
+				if (!header.first.empty()) {
+					result.headers[header.first].push_back(header.second);
+				}
+			}
+			else {
+				result.content = rawResponse.substr(offset);
 			}
 
 			return result;

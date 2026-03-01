@@ -16,7 +16,7 @@ namespace Lensce {
 			~Socket();
 
 			bool send(const std::vector<BYTE>& data);
-			bool receive(std::vector<BYTE>& buffer);
+			bool receive(std::vector<BYTE>& buffer, bool append=false);
 
 		private:
 
