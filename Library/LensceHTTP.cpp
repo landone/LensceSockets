@@ -6,6 +6,40 @@
 namespace Lensce {
 	namespace HTTP {
 
+		namespace {
+
+			std::string restMethodToString(REST type) {
+				switch (type) {
+				case GET:
+					return "GET";
+				case POST:
+					return "POST";
+				case PUT:
+					return "PUT";
+				case DELETE:
+					return "DELETE";
+				case PATCH:
+					return "PATCH";
+				default:
+					return "";
+				}
+			}
+
+			std::string jsonToHeaders(JSON json) {
+
+				std::string result;
+				auto headerMap = json.getMap();
+				for (const auto& pair : headerMap) {
+					const std::string& key = pair.first;
+					const std::string& value = pair.second.value();
+					result += key + ": " + value + "\r\n";
+				}
+				return result;
+
+			}
+
+		}
+
 		std::pair<std::string, std::string> readHeader(const std::string& line) {
 
 			size_t colonPos = line.find(':');
@@ -59,6 +93,24 @@ namespace Lensce {
 			}
 			else {
 				result.content = rawResponse.substr(offset);
+			}
+
+			return result;
+
+		}
+
+		std::string create(REST type, const std::string& domain, const std::string& path, JSON headers, JSON content) {
+
+			std::string result;
+			std::string lineBreak = "\r\n";
+
+			result += restMethodToString(type) + " " + path + " HTTP/1.1" + lineBreak;
+			result += "Host: " + domain + lineBreak;
+			result += jsonToHeaders(headers);
+
+			if (!content.getMap().empty()) {
+				std::string contentStr = content.toString();
+				result += "Content-Length: " + std::to_string(contentStr.size()) + lineBreak + lineBreak + contentStr;
 			}
 
 			return result;

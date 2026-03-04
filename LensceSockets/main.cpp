@@ -7,29 +7,23 @@
 
 int main() {
 
-	std::string ip = "steamcommunity.com";
+	std::string domain = "steamcommunity.com";
 
-	std::string request =
-		"GET / HTTP/1.1\r\n"
-		"Host: steamcommunity.com\r\n"
-		"Accept: */*\r\n"
-		"Accept-Language: en-US,en;q=0.9\r\n"
-		"Connection: close\r\n"
-		"\r\n";
+	Lensce::JSON content;
+	content["username"] = "username";
 
-	std::string publicKeyRequest = 
-		"POST /IAuthenticationService/GetPasswordRSAPublicKey/v1/ HTTP/1.1\r\n"
-		"Host: api.steampowered.com\r\n"
-		"Content-Type: application/x-www-form-urlencoded\r\n"
-		"Accept-Language: en-US,en;q=0.9\r\n"
-		"Connection: close\r\n"
-		"\r\n";
+	Lensce::JSON headers;
+	headers["Content-Type"] = "application/x-www-form-urlencoded";
+	headers["Accept-Language"] = "en-US,en;q=0.9";
+	headers["Connection"] = "close";
 
-	std::cout << "Connecting to " << ip << "..." << std::endl << std::endl;
+	std::string rsaKeyReq = Lensce::HTTP::create(Lensce::HTTP::REST::POST, domain, "/login/getrsakey/", headers, content);
+
+	std::cout << "Connecting to " << domain << "..." << std::endl << std::endl;
 
 	 {
-		Lensce::TLS::Socket socket(ip);
-		std::vector<BYTE> data(request.begin(), request.end());
+		Lensce::TLS::Socket socket(domain);
+		std::vector<BYTE> data(rsaKeyReq.begin(), rsaKeyReq.end());
 		socket.send(data);
 		data.clear();
 		std::string result;
@@ -44,7 +38,7 @@ int main() {
 				std::cout << header << ": " << value << std::endl;
 			}
 		}
-		//std::cout << response.content << std::endl;
+		std::cout << response.content << std::endl;
 	}
 
 	system("pause");

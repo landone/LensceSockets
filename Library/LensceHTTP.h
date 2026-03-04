@@ -4,8 +4,19 @@
 #include <string>
 #include <list>
 
+#include "JSON.h"
+
 namespace Lensce {
 	namespace HTTP {
+
+		enum REST {
+			GET,
+			POST,
+			PUT,
+			DELETE,
+			PATCH,
+			MAX_REST
+		};
 
 		class Response {
 		public:
@@ -14,6 +25,8 @@ namespace Lensce {
 		};
 
 		Response read(const std::string& rawResponse);
+
+		std::string create(REST type, const std::string& domain, const std::string& path, JSON headers, JSON content = JSON());
 
 	}
 }

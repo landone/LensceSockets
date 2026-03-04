@@ -26,7 +26,10 @@ namespace Lensce {
 
 		std::string toString(bool isFormatted=false) const;
 
+		const auto& getMap() { return children; }
+
 	private:
+
 		std::unordered_map<std::string, JSON> children;
 		std::string value_;
 
