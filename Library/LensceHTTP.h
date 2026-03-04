@@ -26,7 +26,9 @@ namespace Lensce {
 
 		Response read(const std::string& rawResponse);
 
-		std::string create(REST type, const std::string& domain, const std::string& path, JSON headers, JSON content = JSON());
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const JSON& content);
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const std::string& body);
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers);
 
 	}
 }

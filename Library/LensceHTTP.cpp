@@ -99,7 +99,7 @@ namespace Lensce {
 
 		}
 
-		std::string create(REST type, const std::string& domain, const std::string& path, JSON headers, JSON content) {
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers) {
 
 			std::string result;
 			std::string lineBreak = "\r\n";
@@ -108,12 +108,26 @@ namespace Lensce {
 			result += "Host: " + domain + lineBreak;
 			result += jsonToHeaders(headers);
 
-			if (!content.getMap().empty()) {
-				std::string contentStr = content.toString();
-				result += "Content-Length: " + std::to_string(contentStr.size()) + lineBreak + lineBreak + contentStr;
+			return result;
+
+		}
+
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const std::string& body) {
+
+			std::string result = create(type, domain, path, headers);
+			std::string lineBreak = "\r\n";
+
+			if (!body.empty()) {
+				result += "Content-Length: " + std::to_string(body.size()) + lineBreak + lineBreak + body;
 			}
 
 			return result;
+
+		}
+
+		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const JSON& content) {
+
+			return create(type, domain, path, headers, content.toString());
 
 		}
 

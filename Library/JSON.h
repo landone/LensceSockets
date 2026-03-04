@@ -26,7 +26,7 @@ namespace Lensce {
 
 		std::string toString(bool isFormatted=false) const;
 
-		const auto& getMap() { return children; }
+		const auto& getMap() const { return children; }
 
 	private:
 

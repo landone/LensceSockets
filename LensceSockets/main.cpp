@@ -9,15 +9,13 @@ int main() {
 
 	std::string domain = "steamcommunity.com";
 
-	Lensce::JSON content;
-	content["username"] = "username";
-
 	Lensce::JSON headers;
 	headers["Content-Type"] = "application/x-www-form-urlencoded";
 	headers["Accept-Language"] = "en-US,en;q=0.9";
 	headers["Connection"] = "close";
 
-	std::string rsaKeyReq = Lensce::HTTP::create(Lensce::HTTP::REST::POST, domain, "/login/getrsakey/", headers, content);
+	std::string body = "username=username";
+	std::string rsaKeyReq = Lensce::HTTP::create(Lensce::HTTP::REST::POST, domain, "/login/getrsakey/", headers, body);
 
 	std::cout << "Connecting to " << domain << "..." << std::endl << std::endl;
 
@@ -31,14 +29,8 @@ int main() {
 		result = std::string(data.begin(), data.end());
 
 		auto response = Lensce::HTTP::read(result);
-		for (const auto& pair : response.headers) {
-			const std::string& header = pair.first;
-			const std::list<std::string>& values = pair.second;
-			for (const std::string& value : values) {
-				std::cout << header << ": " << value << std::endl;
-			}
-		}
-		std::cout << response.content << std::endl;
+		Lensce::JSON jsonResponse(response.content);
+		std::cout << jsonResponse["publickey_mod"].value() << std::endl;
 	}
 
 	system("pause");

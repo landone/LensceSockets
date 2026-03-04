@@ -83,10 +83,18 @@ namespace Lensce {
 						break;
 					}
 					if (!currentKey.empty()) {
-						clear();
-						return;
+						currentKey.clear();
 					}
 					jsonStack.pop();
+					break;
+				}
+				case ',': {
+					if (quoteStart != -1) {
+						break;
+					}
+					if (!currentKey.empty()) {
+						currentKey.clear();
+					}
 					break;
 				}
 				case '\"': {
