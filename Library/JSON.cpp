@@ -93,6 +93,9 @@ namespace Lensce {
 						break;
 					}
 					if (!currentKey.empty()) {
+						size_t start = rawJSON.find_last_of(':', pos) + 1;
+						JSON& top = *jsonStack.top();
+						top[currentKey] = rawJSON.substr(start, pos - start);
 						currentKey.clear();
 					}
 					break;
