@@ -131,5 +131,13 @@ namespace Lensce {
 
 		}
 
+		Response receive(TLS::Socket& socket) {
+			std::vector<BYTE> buffer;
+			std::string result;
+			while (socket.receive(buffer, true)) {}
+			result = std::string(buffer.begin(), buffer.end());
+			return read(result);
+		}
+
 	}
 }

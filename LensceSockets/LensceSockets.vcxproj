@@ -23,7 +23,7 @@
     <ProjectGuid>{5ED08D1E-5C4B-4221-8AB6-B45521E981A9}</ProjectGuid>
     <RootNamespace>LensceSockets</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>LensceSockets</ProjectName>
+    <ProjectName>SteamBot</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,11 +141,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SteamBot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.vcxproj">
       <Project>{b50f8a35-9024-4cdc-a0f4-ed2ad6abc4d8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SteamBot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

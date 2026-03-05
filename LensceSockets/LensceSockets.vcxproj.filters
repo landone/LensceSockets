@@ -5,10 +5,21 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Steam">
+      <UniqueIdentifier>{8730e7b7-4cf6-4f74-b6c9-078cf7c46e18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="SteamBot.cpp">
+      <Filter>Steam</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SteamBot.h">
+      <Filter>Steam</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

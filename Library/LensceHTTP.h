@@ -5,6 +5,7 @@
 #include <list>
 
 #include "JSON.h"
+#include "LensceTLS.h"
 
 namespace Lensce {
 	namespace HTTP {
@@ -25,6 +26,8 @@ namespace Lensce {
 		};
 
 		Response read(const std::string& rawResponse);
+
+		Response receive(TLS::Socket& socket);
 
 		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const JSON& content);
 		std::string create(REST type, const std::string& domain, const std::string& path, const JSON& headers, const std::string& body);

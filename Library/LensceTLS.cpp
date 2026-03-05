@@ -56,6 +56,19 @@ namespace Lensce {
 			return true;
 		}
 
+		bool Socket::send(const std::string& data) {
+			if (!sslObject) {
+				std::cerr << "SSL object not initialized." << std::endl;
+				return false;
+			}
+			int bytesSent = SSL_write(static_cast<SSL*>(sslObject), data.data(), static_cast<int>(data.size()));
+			if (bytesSent <= 0) {
+				std::cerr << "Failed to send data over SSL: " << ERR_get_error() << std::endl;
+				return false;
+			}
+			return true;
+		}
+
 		bool Socket::receive(std::vector<BYTE>& buffer, bool append) {
 			if (!sslObject) {
 				std::cerr << "SSL object not initialized." << std::endl;
