@@ -1,4 +1,4 @@
-#include "LensceTLS.h"
+#include "TLS.h"
 
 #include <iostream>
 
@@ -23,6 +23,7 @@ namespace Lensce {
 				std::cerr << "Failed to create SSL object: " << ERR_get_error() << std::endl;
 				return;
 			}
+			SSL_set_tlsext_host_name(static_cast<SSL*>(sslObject), ip.c_str());
 			SSL_set_fd(static_cast<SSL*>(sslObject), static_cast<int>(baseSocket.getHandle()));
 			if (SSL_connect(static_cast<SSL*>(sslObject)) <= 0) {
 				std::cerr << "Failed to establish SSL connection: " << ERR_get_error() << std::endl;

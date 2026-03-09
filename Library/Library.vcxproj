@@ -20,19 +20,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JSON.h" />
-    <ClInclude Include="LensceHTTP.h" />
-    <ClInclude Include="LensceSocket.h" />
-    <ClInclude Include="LensceTLS.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="JSON.cpp" />
-    <ClCompile Include="LensceHTTP.cpp" />
-    <ClCompile Include="LensceSocket.cpp" />
-    <ClCompile Include="LensceTLS.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Lensce\HTTP.cpp" />
+    <ClCompile Include="Lensce\JSON.cpp" />
+    <ClCompile Include="Lensce\Socket.cpp" />
+    <ClCompile Include="Lensce\TLS.cpp" />
+    <ClCompile Include="Lensce\TLSSocket.cpp" />
+    <ClCompile Include="Lensce\TLSPrivateKey.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Lensce\HTTP.h" />
+    <ClInclude Include="Lensce\JSON.h" />
+    <ClInclude Include="Lensce\Socket.h" />
+    <ClInclude Include="Lensce\TLS.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -120,6 +122,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)packages\openssl-native.3.5.5\lib\win-x64\native;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -154,7 +159,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>libssl.lib;libcrypto.lib;ws2_32.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\animo\Documents\GitHub\LensceSockets\packages\openssl-native.3.5.5\lib\win-x64\native;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)packages\openssl-native.3.5.5\lib\win-x64\native;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

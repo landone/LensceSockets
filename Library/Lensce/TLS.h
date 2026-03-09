@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "LensceSocket.h"
+#include "Socket.h"
 
 using BYTE = unsigned char;
 
@@ -26,6 +26,22 @@ namespace Lensce {
 			void* sslContext = nullptr;
 
 		};
+
+		class PrivateKey {
+		public:
+
+			PrivateKey(const std::string& modulusHex, const std::string& exponentHex);
+			~PrivateKey();
+
+			std::vector<BYTE> encrypt(const std::vector<BYTE>& data);
+
+		private:
+
+			void* privateKeyContext = nullptr;
+
+		};
+
+		std::string base64Encode(const std::vector<BYTE>& data);
 
 	}
 }

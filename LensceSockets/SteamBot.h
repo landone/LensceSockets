@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include <LensceTLS.h>
-#include <LensceHTTP.h>
-#include <JSON.h>
+#include <Lensce/TLS.h>
+#include <Lensce/HTTP.h>
+#include <Lensce/JSON.h>
 
 class SteamBot {
 public:
@@ -15,6 +15,7 @@ private:
 
 	Lensce::TLS::Socket socket;
 	Lensce::JSON headers;
+	Lensce::JSON cookies;
 	std::string username;
 	
 	Lensce::HTTP::Response sendRequest(const std::string& path, const std::string& body);

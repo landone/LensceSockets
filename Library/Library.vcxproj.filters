@@ -1,32 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Lensce">
+      <UniqueIdentifier>{d0044886-8266-4a81-a773-0a650bd4221e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lensce\TLS">
+      <UniqueIdentifier>{ac4e366c-8fe4-41e7-bfc7-3d7e648f9484}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LensceSocket.h" />
-    <ClInclude Include="LensceHTTP.h" />
-    <ClInclude Include="LensceTLS.h" />
-    <ClInclude Include="JSON.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="LensceSocket.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="LensceHTTP.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="LensceTLS.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="JSON.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Lensce\HTTP.cpp">
+      <Filter>Lensce</Filter>
+    </ClCompile>
+    <ClCompile Include="Lensce\JSON.cpp">
+      <Filter>Lensce</Filter>
+    </ClCompile>
+    <ClCompile Include="Lensce\Socket.cpp">
+      <Filter>Lensce</Filter>
+    </ClCompile>
+    <ClCompile Include="Lensce\TLSSocket.cpp">
+      <Filter>Lensce\TLS</Filter>
+    </ClCompile>
+    <ClCompile Include="Lensce\TLSPrivateKey.cpp">
+      <Filter>Lensce\TLS</Filter>
+    </ClCompile>
+    <ClCompile Include="Lensce\TLS.cpp">
+      <Filter>Lensce\TLS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Lensce\HTTP.h">
+      <Filter>Lensce</Filter>
+    </ClInclude>
+    <ClInclude Include="Lensce\JSON.h">
+      <Filter>Lensce</Filter>
+    </ClInclude>
+    <ClInclude Include="Lensce\Socket.h">
+      <Filter>Lensce</Filter>
+    </ClInclude>
+    <ClInclude Include="Lensce\TLS.h">
+      <Filter>Lensce\TLS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
